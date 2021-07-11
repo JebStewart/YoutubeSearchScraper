@@ -24,14 +24,14 @@ class YoutubeScraper:
 
     def search(self, search_term):
       """Run search on youtube."""
-        full_path = self.search_start+search_term
-        self.driver.get(full_path)
+      full_path = self.search_start+search_term
+      self.driver.get(full_path)
 
     def _get_titles(self):
       """Get video titles from first page of search"""
-        results = self.driver.find_elements_by_id('video-title')
-        self.titles = self.titles + [result.text for result in results]
-        return len(results)
+      results = self.driver.find_elements_by_id('video-title')
+      self.titles = self.titles + [result.text for result in results]
+      return len(results)
 
     def _clean_(self, title):
       """Takes string and returns only words with alpha characters"""
