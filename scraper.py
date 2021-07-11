@@ -7,7 +7,12 @@ DRIVER_PATH = r'C:\Users\jebli\AppData\Roaming\Python\Scraping\chromedriver.exe'
 
 class YoutubeScraper:
     def __init__(self):
-        """This tool is used to get titles and thumbnails from a search on youtube"""
+        """
+        This tool is used to get various aspects of videos from a search on youtube.
+        - Title
+        - Date
+        - Thumbnail
+        """
         #options = Options()
         #options.headless=headless
         self.driver = webdriver.Chrome(executable_path=DRIVER_PATH)
@@ -18,33 +23,23 @@ class YoutubeScraper:
         self.df = pd.DataFrame()
 
     def search(self, search_term):
+      """Run search on youtube."""
         full_path = self.search_start+search_term
         self.driver.get(full_path)
 
     def _get_titles(self):
+      """Get video titles from first page of search"""
         results = self.driver.find_elements_by_id('video-title')
         self.titles = self.titles + [result.text for result in results]
         return len(results)
-
-    def get_titles(self):
-      self._get_titles()
-      return self.titles
-
-    def _sanitize_titles(self):
-      if len(self.titles) ==0:
-        self._get_titles()
-      self.clean_titles = self.clean_titles + [self._clean_(title) for title in self.titles]
 
     def _clean_(self, title):
       """Takes string and returns only words with alpha characters"""
       title = re.sub(r'[^A-Za-z ]+', '', title)
       return title.lower()
 
-    def get_clean_titles(self):
-      self._sanitize_titles()
-      return self.clean_titles
-
     def end_session(self):
+      """Close out browser."""
       self.driver.quit()
 
     def RUN(self, queries):
@@ -53,7 +48,6 @@ class YoutubeScraper:
         self.search(query)
         num_of_results = self._get_titles()
         self.query = self.query + ([query]*num_of_results)
-      self._sanitize_titles
       self.df['Query'] = self.query
       self.df['Titles'] = self.titles
       self.df['Clean_Titles'] = self.df['Titles'].apply(lambda x: self._clean_(x))
