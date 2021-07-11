@@ -40,6 +40,9 @@ class YoutubeScraper:
     def get_clean_titles(self):
       self._sanitize_titles()
       return self.clean_titles
+
+    def end_session(self):
+      self.driver.quit()
       
 
 
@@ -52,7 +55,7 @@ if __name__=='__main__':
     df['Titles'] = titles
     df['Clean_Titles'] = yts.get_clean_titles()
     print(df.head())
-    yts.driver.quit()
+    yts.end_session()
 """
 Notes
 Title element
